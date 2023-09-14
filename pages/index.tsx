@@ -212,21 +212,21 @@ const Home: NextPage = () => {
     setLoading(false);
   };
 
-  const handleGenerateBio = async (e: any) => {
-    if (!generatedUserAnalysis) {
-      window.alert("Please do step 1 first");
-      return;
-    }
-    setLoading(true);
-    e.preventDefault();
+  // const handleGenerateBio = async (e: any) => {
+  //   if (!generatedUserAnalysis) {
+  //     window.alert("Please do step 1 first");
+  //     return;
+  //   }
+  //   setLoading(true);
+  //   e.preventDefault();
 
-    const profileGeneratorParam: ProfileGeneratorParam = {
-      userAnalysis: generatedUserAnalysis,
-      requirements: bio,
-    };
-    generateAIresponse(e, profileGeneratorParam, null, setGeneratedBios);
-    setLoading(false);
-  };
+  //   const profileGeneratorParam: ProfileGeneratorParam = {
+  //     userAnalysis: generatedUserAnalysis,
+  //     requirements: bio,
+  //   };
+  //   generateAIresponse(e, profileGeneratorParam, null, setGeneratedBios);
+  //   setLoading(false);
+  // };
 
   return (
     <div className="flex max-w-5xl mx-auto flex-col items-center justify-center py-2 min-h-screen">
@@ -272,7 +272,7 @@ const Home: NextPage = () => {
             title='Analyze User Profile'
           />
 
-          <div className="flex mt-10 items-center space-x-3">
+          {/* <div className="flex mt-10 items-center space-x-3">
             <Image
               src="/2-black.png"
               width={30}
@@ -287,8 +287,8 @@ const Home: NextPage = () => {
               </span>
               .
             </p>
-          </div>
-          <textarea
+          </div> */}
+          {/* <textarea
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             rows={4}
@@ -300,14 +300,14 @@ const Home: NextPage = () => {
           <MDview loading={loading} handleGenerateBio={handleGenerateBio} generatedBios={generatedBios}
             buttonText='Generate GitHub Profile README'
             title='Your GitHub Profile README'
-          />
-          <div className="flex flex-row py-2">
+          /> */}
+          {/* <div className="flex flex-row py-2">
             <p
               onClick={() => setGeneratedBios((prev) => prev ? "" : exampleBios[0])}
             >
               Click to show generated example
             </p>
-          </div>
+          </div> */}
           <div className="mt-10">
             <h2 className="text-2xl font-bold text-slate-900 mb-4">How the AI Works: 
             </h2>
