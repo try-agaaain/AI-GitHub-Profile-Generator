@@ -12,6 +12,7 @@ import {
   ReconnectInterval,
 } from "eventsource-parser";
 import MDview from '@/components/mdView';
+import { ModelSelect, OpenAIModel } from "@/components/ModelSelect";
 
 const exampleBios = [`
 # About Me
@@ -63,6 +64,7 @@ const Home: NextPage = () => {
   const [generatedUserAnalysis, setGeneratedUserAnalysis] = useState<string>("");
   const [generatedBios, setGeneratedBios] = useState<string>("");
   const [userName, setUserName] = useState<string>("");
+  const [model, setModel] = useState<OpenAIModel>('gpt-3.5-turbo');
 
   const [githubProfileData, setGithubProfileData] = useState<string>("");
   const [githubStatsData, setGithubStatsData] = useState<string>("");
@@ -246,23 +248,26 @@ const Home: NextPage = () => {
           <Github />
           <p>Star on GitHub</p>
         </a>
-        <h1 className="sm:text-6xl text-4xl max-w-[708px] font-bold text-slate-900 text-center">
-          Generate GitHub Profile README with GPT
+        <h1 className="sm:text-1xl text-4xl max-w-[708px] font-bold text-slate-900 text-center">
+          Generate Bpftrace Program with GPT
         </h1>
         <p className="text-slate-500 mt-5">14,456 Profile generated so far.</p>
         <div className="max-w-xl w-full">
-          <div className="flex mb-5 items-center space-x-3">
+          <div className="flex  items-center space-x-3">
             <Image src="/1-black.png" width={30} height={30} alt="1 icon" />
             <p className="text-left font-medium">Let AI Summary your Github Activity and repo with One click.</p>
           </div>
-          <div className="block">
+          <div className="block" style={{ display: 'flex', alignItems: 'center' }}>
             {/* Let user input their github user name here */}
             <input
               type="text"
               onChange={(e) => setUserName(e.target.value)}
-              className="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-5"
+              className="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-5 mr-2"
               placeholder="Enter your github username"
             />
+            
+            <ModelSelect model={model} onChange={(value) => setModel(value)} />
+
           </div>
           <MDview
             loading={loading}
@@ -272,6 +277,44 @@ const Home: NextPage = () => {
             title='Analyze User Profile'
           />
 
+
+          {/* <div className="flex mt-10 items-center space-x-3">
+            <Image
+              src="/2-black.png"
+              width={30}
+              height={30}
+              alt="1 icon"
+              className="mb-5 sm:mb-0"
+            />
+            <p className="text-left font-medium">
+              Write a few sentences about yourself{" "}
+              <span className="text-slate-500">
+                (or leave it blank and we'll generate something for you!)
+              </span>
+              .
+            </p>
+          </div> */}
+          {/* <textarea
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            rows={4}
+            className="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-5"
+            placeholder={
+              "e.g. I am a Full Stack Developer with 9+ years of experience in developing enterprise applications and open-source software."
+            }
+          />
+          <MDview loading={loading} handleGenerateBio={handleGenerateBio} generatedBios={generatedBios}
+            buttonText='Generate GitHub Profile README'
+            title='Your GitHub Profile README'
+          /> */}
+          {/* <div className="flex flex-row py-2">
+            <p
+              onClick={() => setGeneratedBios((prev) => prev ? "" : exampleBios[0])}
+            >
+              Click to show generated example
+            </p>
+          </div> */}
+          
           {/* <div className="flex mt-10 items-center space-x-3">
             <Image
               src="/2-black.png"
