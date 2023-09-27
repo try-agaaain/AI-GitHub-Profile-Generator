@@ -59,6 +59,20 @@ const Home: NextPage = () => {
           bpfType: bpfType,
         }),
       });
+      /* Use local services */
+      // response = await fetch('http://127.0.0.1:4000', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     userInput: userInput,
+      //     additionalContex: additionalContex,
+      //     apiKey: apiKey,
+      //     model: model,
+      //     bpfType: bpfType,
+      //   }),
+      // });
     } else {
       console.log("no param");
       return;
@@ -145,11 +159,20 @@ const Home: NextPage = () => {
         <div className="max-w-xl w-full">
 
           <div className="block">
-            <input
+            {/* <input
               type="text"
               onChange={(e) => setUserInput(e.target.value)}
               className="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-5"
-              placeholder="Enter natural language command about eBPF program"
+              placeholder="Enter natural language command, e.g. write a bpftrace program to trace tcp_connect events and displaying the source and destination IP addresses with their respective ports."
+            /> */}
+            <textarea
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+              rows={2}
+              className="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-1"
+              placeholder={
+                "Enter natural language command about eBPF command."
+              }
             />
             <textarea
               value={additionalContex}
@@ -157,7 +180,7 @@ const Home: NextPage = () => {
               rows={4}
               className="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-1"
               placeholder={
-                "e.g. I am a Full Stack Developer with 9+ years of experience in developing enterprise applications and open-source software."
+                "Enter additional context, for example: Tracing the tcp_connect function to capture both IPv4 and IPv6 TCP connection attempts, displaying the source and destination IP addresses with their respective ports, while ensuring the destination port's byte order is corrected (flipped)."
               }
             />
           </div>
@@ -165,19 +188,18 @@ const Home: NextPage = () => {
             loading={loading}
             handleGenerateBio={handleGenerateUserAnalysis}
             generatedBios={generatedUserAnalysis}
-            buttonText='Let AI analysis Your Github Profile'
-            title='Analyze User Profile'
+            buttonText='Let AI generate eBPF program'
+            title='Generate eBPF Program'
           />
 
           <div className="mt-10">
             <h2 className="text-2xl font-bold text-slate-900 mb-4">How the AI Works: 
             </h2>
             <ol className="list-decimal list-inside space-y-2">
-              <li className="text-slate-500">Retrieves the user's repository information to understand their project contributions.</li>
-              <li className="text-slate-500">Fetches the user's profile data to gain insights into their professional background and skills.</li>
-              <li className="text-slate-500">Analyzes the user's contributions to identify patterns, frequency, and areas of expertise.</li>
-              <li className="text-slate-500">Summarizes the user's activities, contributions, and skills into a comprehensive overview.</li>
-              <li className="text-slate-500">Generates a new, enriched GitHub profile README that highlights the user's contributions and skills.</li>
+              <li className="text-slate-500">Ask LLM to search the Kernel Logic DB for the function information of hook functions.</li>
+              <li className="text-slate-500">Generate assumes for the verifier.</li>
+              <li className="text-slate-500">Dump the LLVM IR of the program, then using verifier to verify it.</li>
+              <li className="text-slate-500">Ask AI fix the semantic error of the program.</li>
             </ol>
           </div>
         </div>
