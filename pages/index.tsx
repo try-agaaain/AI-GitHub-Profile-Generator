@@ -239,7 +239,7 @@ const Home: NextPage = () => {
 
       <Header />
       <div className="flex flex-1 w-full flex-col items-center justify-center px-4 mt-12 sm:mt-20">
-        <a
+        {/* <a
           className="flex max-w-fit items-center justify-center space-x-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm shadow-md transition-colors hover:bg-gray-100 mb-5"
           href="https://github.com/yunwei37/AI-GitHub-Profile-Generator"
           target="_blank"
@@ -247,16 +247,16 @@ const Home: NextPage = () => {
         >
           <Github />
           <p>Star on GitHub</p>
-        </a>
-        <h1 className="sm:text-6xl text-4xl max-w-[708px] font-bold text-slate-900 text-center">
+        </a> */}
+        {/* <h1 className="sm:text-6xl text-4xl max-w-[708px] font-bold text-slate-900 text-center">
           Generate GitHub Profile README with GPT
-        </h1>
-        <p className="text-slate-500 mt-5">14,456 Profile generated so far.</p>
+        </h1> */}
+        {/* <p className="text-slate-500 mt-5">14,456 Profile generated so far.</p> */}
         <div className="max-w-xl w-full">
-          <div className="flex mb-5 items-center space-x-3">
+          {/* <div className="flex mb-5 items-center space-x-3">
             <Image src="/1-black.png" width={30} height={30} alt="1 icon" />
             <p className="text-left font-medium">Let AI Summary your Github Activity and repo with One click.</p>
-          </div>
+          </div> */}
           <div className="block">
             {/* Let user input their github user name here */}
             <input
@@ -264,6 +264,15 @@ const Home: NextPage = () => {
               onChange={(e) => setUserName(e.target.value)}
               className="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-5"
               placeholder="Enter your github username"
+            />
+            <textarea
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              rows={4}
+              className="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-1"
+              placeholder={
+                "e.g. I am a Full Stack Developer with 9+ years of experience in developing enterprise applications and open-source software."
+              }
             />
           </div>
           <MDview
@@ -274,7 +283,7 @@ const Home: NextPage = () => {
             title='Analyze User Profile'
           />
 
-          <div className="flex mt-10 items-center space-x-3">
+          {/* <div className="flex mt-10 items-center space-x-3">
             <Image
               src="/2-black.png"
               width={30}
@@ -289,8 +298,8 @@ const Home: NextPage = () => {
               </span>
               .
             </p>
-          </div>
-          <textarea
+          </div> */}
+          {/* <textarea
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             rows={4}
@@ -298,18 +307,18 @@ const Home: NextPage = () => {
             placeholder={
               "e.g. I am a Full Stack Developer with 9+ years of experience in developing enterprise applications and open-source software."
             }
-          />
-          <MDview loading={loading} handleGenerateBio={handleGenerateBio} generatedBios={generatedBios}
+          /> */}
+          {/* <MDview loading={loading} handleGenerateBio={handleGenerateBio} generatedBios={generatedBios}
             buttonText='Generate GitHub Profile README'
             title='Your GitHub Profile README'
-          />
-          <div className="flex flex-row py-2">
+          /> */}
+          {/* <div className="flex flex-row py-2">
             <p
               onClick={() => setGeneratedBios((prev) => prev ? "" : exampleBios[0])}
             >
               Click to show generated example
             </p>
-          </div>
+          </div> */}
           <div className="mt-10">
             <h2 className="text-2xl font-bold text-slate-900 mb-4">How the AI Works: 
             </h2>
