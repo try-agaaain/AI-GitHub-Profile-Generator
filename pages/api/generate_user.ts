@@ -36,21 +36,21 @@ and provides a well-rounded understanding of the user's activity on GitHub.
 `;
 
 const handler = async (req: Request): Promise<Response> => {
-  const { userStats, userProfile, apiKey, model, bpfType } = (await req.json()) as {
-    userStats?: string;
-    userProfile?: string;
+  const { userInput, additionalContex, apiKey, model, bpfType } = (await req.json()) as {
+    userInput?: string;
+    additionalContex?: string;
     apiKey?: string;
     model?: OpenAIModel;
     bpfType?: BPF;
   };
-
-  if (!userStats || !userProfile) {
-    return new Response("No prompt in the request", { status: 400 });
+  console.log(`Request parameters: ${userInput}, ${additionalContex}, ${apiKey}, ${model}, ${bpfType}`);
+  if (!userInput || !additionalContex) {
+    return new Response("Parameters in the request are missing", { status: 400 });
   }
   const prompt = promptTemplateAnalyzeUser.replace
-    ("{{userStats}}", userStats)
-    .replace("{{userProfile}}", userProfile);
-  console.log(`请求参数: ${userStats}, ${userProfile}, ${apiKey}, ${model}, ${bpfType}`);
+    ("{{userStats}}", userInput)
+    .replace("{{userProfile}}", additionalContex);
+  
   const payload: OpenAIStreamPayload = {
     model: "gpt-3.5-turbo-16k",
     messages: [{ role: "user", content: prompt }],
