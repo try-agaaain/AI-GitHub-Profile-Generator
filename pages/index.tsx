@@ -12,6 +12,8 @@ import {
   ReconnectInterval,
 } from "eventsource-parser";
 import MDview from '@/components/mdView';
+import { APIKeyInput } from '@/components/APIKeyInput';
+import { BPF, BPFSelect, ModelSelect, OpenAIModel } from '@/components/ModelSelect';
 
 const exampleBios = [`
 # About Me
@@ -69,7 +71,10 @@ const Home: NextPage = () => {
   const [githubRawData, setGithubRawData] = useState<string>("");
 
   const bioRef = useRef<null | HTMLDivElement>(null);
-
+  const [apiKey, setApiKey] = useState<string>('');
+  const [model, setModel] = useState<OpenAIModel>('gpt-3.5-turbo');
+  const [bpfType, setBPF] = useState<BPF>('libbpf');
+  
   const scrollToBios = () => {
     if (bioRef.current !== null) {
       bioRef.current.scrollIntoView({ behavior: "smooth" });
@@ -77,31 +82,34 @@ const Home: NextPage = () => {
   };
 
   // get github user info from api/github/[username]
-  async function getUserStats(username: string): Promise<string> {
-    const response = await fetch(`/api/github/${username}`);
-    if (!response.ok) {
-      window.alert("Error: " + response.statusText);
-      throw new Error(response.statusText);
-    }
-    const data = await response.json();
-    return JSON.stringify(data);
-  }
+  // async function getUserStats(username: string): Promise<string> {
+  //   const response = await fetch(`/api/github/${username}`);
+  //   if (!response.ok) {
+  //     window.alert("Error: " + response.statusText);
+  //     throw new Error(response.statusText);
+  //   }
+  //   const data = await response.json();
+  //   return JSON.stringify(data);
+  // }
 
-  async function getUserPage(username: string): Promise<string> {
-    const url = `/api/scrape_url?username=${username}`;
-    const response = await fetch(url);
-    if (!response.ok) {
-      window.alert("Error: " + response.statusText);
-      throw new Error(response.statusText);
-    }
-    const data = await response.json();
-    console.info("index getUserPage: ", data)
-    return JSON.stringify(data);
-  }
+  // async function getUserPage(username: string): Promise<string> {
+  //   const url = `/api/scrape_url?username=${username}`;
+  //   const response = await fetch(url);
+  //   if (!response.ok) {
+  //     window.alert("Error: " + response.statusText);
+  //     throw new Error(response.statusText);
+  //   }
+  //   const data = await response.json();
+  //   console.info("index getUserPage: ", data)
+  //   return JSON.stringify(data);
+  // }
 
   interface UserAnalysisParam {
     userStats: string;
     userProfile: string;
+    apiKey: string;
+    model: OpenAIModel;
+    bpfType: BPF;
   }
 
   interface ProfileGeneratorParam {
@@ -116,19 +124,7 @@ const Home: NextPage = () => {
     setGenerated((prev) => "");
     e.preventDefault();
     let response;
-    if (profileGeneratorParam) {
-      console.log("profileGeneratorParam");
-      response = await fetch("/api/generate_profile", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          insight: profileGeneratorParam.userAnalysis,
-          requirements: profileGeneratorParam.requirements,
-        }),
-      });
-    } else if (userAnalysisParam) {
+    if (userAnalysisParam) {
       console.log("userAnalysisParam");
       response = await fetch("/api/generate_user", {
         method: "POST",
@@ -193,7 +189,7 @@ const Home: NextPage = () => {
       // get user state and analysis user first
       // setGeneratedBios(`Getting user stats for ${userName}...`);
       // const userStats: string = await getUserStats(userName);
-      const userStats: string = `{"html_url":"https://github.com/445","type":"User","name":null,"company":null,"blog":"","location":null,"email":null,"hireable":null,"bio":null,"twitter_username":null,"public_repos":0,"public_gists":0,"followers":0,"following":0,"created_at":"2013-07-17T10:06:57Z","updated_at":"2020-12-09T01:29:41Z","error":"{}"}`;
+      const userStats: string = userName;
       // console.log(userStats);
       // setGithubStatsData(userStats);
 
@@ -206,6 +202,9 @@ const Home: NextPage = () => {
       const userAnalysisParam: UserAnalysisParam = {
         userStats: userStats,
         userProfile: userPage,
+        apiKey: apiKey,
+        model: model,
+        bpfType: bpfType,
       };
       generateAIresponse(e, null, userAnalysisParam, setGeneratedUserAnalysis);
     } catch (e) {
@@ -214,20 +213,26 @@ const Home: NextPage = () => {
     setLoading(false);
   };
 
-  const handleGenerateBio = async (e: any) => {
-    if (!generatedUserAnalysis) {
-      window.alert("Please do step 1 first");
-      return;
-    }
-    setLoading(true);
-    e.preventDefault();
+  // const handleGenerateBio = async (e: any) => {
+  //   if (!generatedUserAnalysis) {
+  //     window.alert("Please do step 1 first");
+  //     return;
+  //   }
+  //   setLoading(true);
+  //   e.preventDefault();
 
-    const profileGeneratorParam: ProfileGeneratorParam = {
-      userAnalysis: generatedUserAnalysis,
-      requirements: bio,
-    };
-    generateAIresponse(e, profileGeneratorParam, null, setGeneratedBios);
-    setLoading(false);
+  //   const profileGeneratorParam: ProfileGeneratorParam = {
+  //     userAnalysis: generatedUserAnalysis,
+  //     requirements: bio,
+  //   };
+  //   generateAIresponse(e, profileGeneratorParam, null, setGeneratedBios);
+  //   setLoading(false);
+  // };
+
+  const handleApiKeyChange = (value: string) => {
+    setApiKey(value);
+
+    localStorage.setItem('apiKey', value);
   };
 
   return (
@@ -252,6 +257,15 @@ const Home: NextPage = () => {
           Generate GitHub Profile README with GPT
         </h1> */}
         {/* <p className="text-slate-500 mt-5">14,456 Profile generated so far.</p> */}
+        <div className="mt-2 flex items-center space-x-2">
+          {/* <div className="mt-6 text-center text-sm"> */}
+            <APIKeyInput apiKey={apiKey} onChange={handleApiKeyChange} />
+          {/* </div> */}
+
+          <ModelSelect model={model} onChange={(value) => setModel(value)} />
+
+          <BPFSelect bpfType={bpfType} onChange={(value) => setBPF(value)} />
+        </div>
         <div className="max-w-xl w-full">
           {/* <div className="flex mb-5 items-center space-x-3">
             <Image src="/1-black.png" width={30} height={30} alt="1 icon" />
@@ -330,7 +344,7 @@ const Home: NextPage = () => {
               <li className="text-slate-500">Summarizes the user's activities, contributions, and skills into a comprehensive overview.</li>
               <li className="text-slate-500">Generates a new, enriched GitHub profile README that highlights the user's contributions and skills.</li>
             </ol>
-            <p>{githubRawData}</p>
+            {/* <p>{githubRawData}</p> */}
           </div>
         </div>
         <hr className="h-px bg-gray-700 border-1 dark:bg-gray-700" />

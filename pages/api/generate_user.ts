@@ -1,4 +1,5 @@
 // MIT License Copyright (c) 2023 Hassan El Mghari
+import { BPF, OpenAIModel } from "@/components/ModelSelect";
 import { OpenAIStream, OpenAIStreamPayload } from "../../utils/OpenAIStream";
 
 // if (!process.env.OPENAI_API_KEY) {
@@ -35,9 +36,12 @@ and provides a well-rounded understanding of the user's activity on GitHub.
 `;
 
 const handler = async (req: Request): Promise<Response> => {
-  const { userStats, userProfile } = (await req.json()) as {
+  const { userStats, userProfile, apiKey, model, bpfType } = (await req.json()) as {
     userStats?: string;
     userProfile?: string;
+    apiKey?: string;
+    model?: OpenAIModel;
+    bpfType?: BPF;
   };
 
   if (!userStats || !userProfile) {
@@ -46,7 +50,7 @@ const handler = async (req: Request): Promise<Response> => {
   const prompt = promptTemplateAnalyzeUser.replace
     ("{{userStats}}", userStats)
     .replace("{{userProfile}}", userProfile);
-  console.log(prompt);
+  console.log(`请求参数: ${userStats}, ${userProfile}, ${apiKey}, ${model}, ${bpfType}`);
   const payload: OpenAIStreamPayload = {
     model: "gpt-3.5-turbo-16k",
     messages: [{ role: "user", content: prompt }],
