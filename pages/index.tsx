@@ -95,6 +95,7 @@ const Home: NextPage = () => {
       throw new Error(response.statusText);
     }
     const data = await response.json();
+    console.info("index getUserPage: ", data)
     return JSON.stringify(data);
   }
 
@@ -190,14 +191,15 @@ const Home: NextPage = () => {
     e.preventDefault();
     try {
       // get user state and analysis user first
-      setGeneratedBios(`Getting user stats for ${userName}...`);
-      const userStats: string = await getUserStats(userName);
-      console.log(userStats);
-      setGithubStatsData(userStats);
+      // setGeneratedBios(`Getting user stats for ${userName}...`);
+      // const userStats: string = await getUserStats(userName);
+      const userStats: string = `{"html_url":"https://github.com/445","type":"User","name":null,"company":null,"blog":"","location":null,"email":null,"hireable":null,"bio":null,"twitter_username":null,"public_repos":0,"public_gists":0,"followers":0,"following":0,"created_at":"2013-07-17T10:06:57Z","updated_at":"2020-12-09T01:29:41Z","error":"{}"}`;
+      // console.log(userStats);
+      // setGithubStatsData(userStats);
 
-      setGeneratedBios(`Getting user profile for ${userName}...`);
-      const userPage: string = await getUserPage(userName);
-      console.log(userPage);
+      // setGeneratedBios(`Getting user profile for ${userName}...`);
+      // const userPage: string = await getUserPage(userName);
+      const userPage: string = "not page, this is my test";
       setGithubProfileData(userPage);
     
       setGeneratedBios("");

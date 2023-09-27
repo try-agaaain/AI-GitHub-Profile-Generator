@@ -32,6 +32,7 @@ interface UserStatsFull {
 export default async function generateUserStats(owner: string): Promise<UserStatsFull> {
     // get the owner's GitHub stats
     const response = await fetch(`https://api.github.com/users/${owner}`);
+    console.info("userData.ts generateUserStats", response)
     if (!response.ok) {
         // if is 404, throw error
         if (response.status === 404) {
