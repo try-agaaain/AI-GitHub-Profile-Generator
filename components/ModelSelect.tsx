@@ -15,7 +15,7 @@ export const ModelSelect: FC<Props> = ({ model, onChange }) => {
 
   return (
     <select
-      className="h-[50px] w-[140px] w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-5 mr-2"
+      className="h-[50px] w-[140px] w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-2 mr-2"
       value={model}
       onChange={handleChange}
     >

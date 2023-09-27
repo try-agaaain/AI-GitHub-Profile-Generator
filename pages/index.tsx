@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import Footer from "../components/Footer";
 import Github from "../components/GitHub";
 import Header from "../components/Header";
+import { APIKeyInput } from '@/components/APIKeyInput';
 import {
   createParser,
   ParsedEvent,
@@ -14,62 +15,16 @@ import {
 import MDview from '@/components/mdView';
 import { ModelSelect, OpenAIModel } from "@/components/ModelSelect";
 
-const exampleBios = [`
-# About Me
-
-Hi, I'm Yunwei, a passionate learner and software developer from Hangzhou, China. Welcome to my GitHub profile!
-
-- 🏢 I currently work at eunomia-bpf to create eBPF-based solutions for the cloud
-- 🌍 Find me on the web: [www.yunwei123.tech](https://www.yunwei123.tech/)
-- ✉️ Contact me: To be announced
-- 📖 I love exploring new technologies and applying them to solve real-world problems
-
-## 🙋‍♂️ A bit more about me
-
-I started my coding journey in 2017, and since then, I have been dedicated to expanding my knowledge and skills. I believe that having a curious and open mind allows me to continue learning and improving.
-
-## 👨‍💻 Stats
-
-![Github Stats](https://github-readme-stats.vercel.app/api?username=yunwei37)
-![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=yunwei37)
-
-Feel free to explore my repositories to get a better sense of my work and interests.
-
-## 🏆 Achievements
-
-Here are some notable achievements and contributions:
-
-[![trophy](https://github-profile-trophy.vercel.app/?username=yunwei37)](https://github.com/yunwei37)
-
-These achievements are a testament to my dedication and passion for coding.
-
-## ✨ Let's Connect
-
-I would love to connect with fellow developers, entrepreneurs, and technology enthusiasts. Here are a few ways to get in touch with me:
-
-- Website: [yunwei123.tech](https://www.yunwei123.tech/)
-- Twitter: [@yunwei37](https://twitter.com/yunwei37)
-- GitHub: [yunwei37](https://github.com/yunwei37)
-
-Let's collaborate, share ideas, and make meaningful contributions to the world of technology!
-
----
-
-Thank you for taking the time to visit my GitHub profile and read this README. Feel free to explore my projects, and don't hesitate to reach out if you have any questions or opportunities for collaboration. Together, we can make a positive impact in the world of software development!
-`];
-
 const Home: NextPage = () => {
   const [loading, setLoading] = useState(false);
-  const [bio, setBio] = useState("");
   const [generatedUserAnalysis, setGeneratedUserAnalysis] = useState<string>("");
-  const [generatedBios, setGeneratedBios] = useState<string>("");
   const [userName, setUserName] = useState<string>("");
   const [model, setModel] = useState<OpenAIModel>('gpt-3.5-turbo');
 
   const [githubProfileData, setGithubProfileData] = useState<string>("");
   const [githubStatsData, setGithubStatsData] = useState<string>("");
   const [githubRawData, setGithubRawData] = useState<string>("");
-
+  const [apiKey, setApiKey] = useState<string>('');
   const bioRef = useRef<null | HTMLDivElement>(null);
 
   const scrollToBios = () => {
@@ -77,7 +32,23 @@ const Home: NextPage = () => {
       bioRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
+  // if (!apiKey) {
+  //   window.alert('Please enter an API key.');
+  //   return;
+  // }
+  const handleApiKeyChange = (value: string) => {
+    setApiKey(value);
 
+    localStorage.setItem('apiKey', value);
+  };
+
+  useEffect(() => {
+    const apiKey = localStorage.getItem('apiKey');
+
+    if (apiKey) {
+      setApiKey(apiKey);
+    }
+  }, []);
   // get github user info from api/github/[username]
   async function getUserStats(username: string): Promise<string> {
     const response = await fetch(`/api/github/${username}`);
@@ -257,17 +228,18 @@ const Home: NextPage = () => {
             <Image src="/1-black.png" width={30} height={30} alt="1 icon" />
             <p className="text-left font-medium">Let AI Summary your Github Activity and repo with One click.</p>
           </div>
+
           <div className="block" style={{ display: 'flex', alignItems: 'center' }}>
-            {/* Let user input their github user name here */}
+            <APIKeyInput apiKey={apiKey} onChange={handleApiKeyChange} />
+            <ModelSelect model={model} onChange={(value) => setModel(value)} />
+          </div>
+          <div className="block" style={{ display: 'flex', alignItems: 'center' }}>
             <input
               type="text"
               onChange={(e) => setUserName(e.target.value)}
               className="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-5 mr-2"
               placeholder="Enter your github username"
             />
-            
-            <ModelSelect model={model} onChange={(value) => setModel(value)} />
-
           </div>
           <MDview
             loading={loading}
@@ -278,7 +250,7 @@ const Home: NextPage = () => {
           />
 
 
-          {/* <div className="flex mt-10 items-center space-x-3">
+          <div className="flex mt-10 items-center space-x-3">
             <Image
               src="/2-black.png"
               width={30}
@@ -293,7 +265,7 @@ const Home: NextPage = () => {
               </span>
               .
             </p>
-          </div> */}
+          </div>
           {/* <textarea
             value={bio}
             onChange={(e) => setBio(e.target.value)}
